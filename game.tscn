@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://bgjucuqub77wq"]
+
+[ext_resource type="Script" uid="uid://d0d16g24e8kv8" path="res://game.gd" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://bbjd4rmnati4b" path="res://enemy.tscn" id="2_e2o6t"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e2o6t"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_feb5d"]
+sky_material = SubResource("ProceduralSkyMaterial_e2o6t")
+
+[sub_resource type="Environment" id="Environment_fc0e3"]
+background_mode = 2
+sky = SubResource("Sky_feb5d")
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_laaf8"]
+albedo_color = Color(0.81392735, 0.81392676, 1.1551381e-06, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ef8af"]
+size = Vector3(5, 5, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_laaf8"]
+size = Vector3(5, 5, 5)
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_laaf8"]
+vertices = PackedVector3Array(-100.45953, 2.7941773, -100.94159, -100.45953, 2.7941773, 98.05841, 98.54047, 2.7941773, 98.05841, 98.54047, 2.7941773, -100.94159)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+geometry_source_geometry_mode = 2
+geometry_source_group_name = &"navigation_group"
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vmydg"]
+size = Vector2(200, 200)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3k44x"]
+size = Vector3(200, 0.1, 200)
+
+[sub_resource type="Curve3D" id="Curve3D_e2o6t"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -68.01337, -0.5, -75.59057, 0, 0, 0, 0, 0, 0, -61.06207, -0.5, 77.33704, 0, 0, 0, 0, 0, 0, 83.176544, -0.5, 80.812744, 0, 0, 0, 0, 0, 0, 79.70089, -0.5, -84.27966),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
+
+[node name="Game" type="Node3D" unique_id=2056687741]
+script = ExtResource("1_e2o6t")
+enemy_scene = ExtResource("2_e2o6t")
+max_enemies = 100
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=123853493]
+environment = SubResource("Environment_fc0e3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1404598984]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Town" type="StaticBody3D" parent="." unique_id=72884067]
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Town" unique_id=426135503]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4819279, 0)
+material_override = SubResource("StandardMaterial3D_laaf8")
+mesh = SubResource("BoxMesh_ef8af")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Town" unique_id=1313511466]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4819279, 0)
+shape = SubResource("BoxShape3D_laaf8")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=193233245]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9595337, -2.3441772, 1.4415894)
+visible = false
+navigation_mesh = SubResource("NavigationMesh_laaf8")
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1110822943 groups=["navigation_group"]]
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=341965201]
+mesh = SubResource("PlaneMesh_vmydg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1059779934]
+shape = SubResource("BoxShape3D_3k44x")
+
+[node name="SpawnPath" type="Path3D" parent="." unique_id=29293820]
+curve = SubResource("Curve3D_e2o6t")
+
+[node name="SpawnLocation" type="PathFollow3D" parent="SpawnPath" unique_id=883688593]
+transform = Transform3D(-0.9989625, 0, -0.04540777, 0, 1, 0, 0.04540777, 0, -0.9989625, -68.01337, -0.5, -75.59057)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1102414483]
+transform = Transform3D(1, 0, 0, 0, 0.9592646, 0.2825092, 0, -0.2825092, 0.9592646, 0, 16.726868, 92.92587)
+
+[node name="EnemySpawnTimer" type="Timer" parent="." unique_id=254528283]
+autostart = true
+
+[connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
