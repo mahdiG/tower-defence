@@ -3,6 +3,7 @@ extends CharacterBody3D
 signal died()
 
 @export var speed := 6
+@export var basic_attack_damage := 10
 
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var attack_cooldown_timer: Timer = $AttackCooldownTimer
@@ -37,9 +38,20 @@ func _physics_process(delta: float) -> void:
 func initialize(spawn_position: Vector3, initial_target: StaticBody3D) -> void:
 	target = initial_target
 	position = spawn_position
+	
+
+func attack():
+	print("attack target: ", target)
+	if target.has_method("damage"):
+		target.damage(basic_attack_damage)
+		
 
 func _on_navigation_agent_velocity_computed(safe_velocity: Vector3) -> void:
 	velocity = safe_velocity
 
 func _on_navigation_agent_target_reached() -> void:
-	print("reached target")
+	if !isAttackOnCooldown:
+		attack()
+
+func _on_attack_cooldown_timer_timeout() -> void:
+	isAttackOnCooldown = false

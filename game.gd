@@ -6,13 +6,14 @@ signal game_over()
 @export var max_enemies := 10
 
 @onready var enemy_spawn_timer: Timer = $EnemySpawnTimer
-@onready var enemy_target: StaticBody3D = $Town
+@onready var enemy_target: StaticBody3D = $Shrine
 @onready var enemy_spawn_location: PathFollow3D = $SpawnPath/SpawnLocation
 
 @onready var fps_label: Label = $DebugStats/DebugContainer/FpsLabel
 @onready var health_label: Label = $DebugStats/DebugContainer/HealthLabel
 @onready var big_center_label: Label = $CenterContainer/BigCenterLabel
 @onready var big_center_label_timer: Timer = $BigCenterLabelTimer
+@onready var placer: Node3D = $Placer
 
 var is_game_over := false
 var enemies_spawned := 0
@@ -24,6 +25,13 @@ func _ready() -> void:
 	pass
 	#player.died.connect(_on_player_died)
 	#start_round()
+	
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			placer.select_troop()
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

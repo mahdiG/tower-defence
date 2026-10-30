@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://ccim83gp3bvnk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j4buy"]
+albedo_color = Color(0.37490928, 0.7188842, 9.62615e-07, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_laaf8"]
+size = Vector3(1, 3, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ef8af"]
+size = Vector3(1, 3, 1)
+
+[node name="Troop" type="StaticBody3D" unique_id=38908698]
+collision_layer = 2
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2068360649]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+material_override = SubResource("StandardMaterial3D_j4buy")
+mesh = SubResource("BoxMesh_laaf8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1027849290]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_ef8af")
