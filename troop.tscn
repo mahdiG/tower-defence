@@ -35,9 +35,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -0.7)
 
 [node name="AttackCooldownTimer" type="Timer" parent="." unique_id=1281296034]
 
-[node name="DetectionArea" type="Area3D" parent="." unique_id=1001311134]
+[node name="AttackArea" type="Area3D" parent="." unique_id=1001311134]
 collision_mask = 4
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea" unique_id=863871145]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea" unique_id=863871145]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 shape = SubResource("BoxShape3D_laaf8")

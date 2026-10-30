@@ -2,21 +2,25 @@ extends StaticBody3D
 
 @export var attack_damage: float = 10.0
 @export var attack_interval: float = 1.0
+@export var max_health: float = 100.0
 @export var turn_to_face_target: bool = true
 @export var projectile_scene: PackedScene
 
-@onready var detection_area: Area3D = $DetectionArea
+@onready var attack_area: Area3D = $AttackArea
 @onready var attack_cooldown_timer: Timer = $AttackCooldownTimer
 @onready var projectile_spawn_point: Marker3D = $ProjectileSpawnPoint
 
 var isAttackOnCooldown := false
+var health := 100.0
 var current_target: Node3D = null
 var enemies_in_range: Array[Node3D] = []
 
 
 func _ready() -> void:
-	detection_area.body_entered.connect(_on_enemy_entered_range)
-	detection_area.body_exited.connect(_on_enemy_left_range)
+	health = max_health
+
+	attack_area.body_entered.connect(_on_enemy_entered_range)
+	attack_area.body_exited.connect(_on_enemy_left_range)
 
 	attack_cooldown_timer.one_shot = true
 	attack_cooldown_timer.wait_time = maxf(attack_interval, 0.01)
@@ -93,3 +97,13 @@ func attack() -> void:
 
 func _on_attack_cooldown_timer_timeout() -> void:
 	isAttackOnCooldown = false
+
+
+func take_damage(amount: float) -> void:
+	health -= amount
+	if health <= 0.0:
+		die()
+
+
+func die() -> void:
+	queue_free()

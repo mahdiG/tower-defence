@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bbjd4rmnati4b" path="res://enemy.tscn" id="2_e2o6t"]
 [ext_resource type="Script" uid="uid://dsd3fi82ydsfd" path="res://placer.gd" id="3_feb5d"]
 [ext_resource type="PackedScene" uid="uid://ccim83gp3bvnk" path="res://troop.tscn" id="4_fc0e3"]
+[ext_resource type="Script" uid="uid://batqbo88cenqf" path="res://shrine.gd" id="5_shrine"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e2o6t"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -60,6 +61,7 @@ shadow_enabled = true
 
 [node name="Shrine" type="StaticBody3D" parent="." unique_id=72884067]
 collision_layer = 2
+script = ExtResource("5_shrine")
 metadata/_edit_group_ = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Shrine" unique_id=426135503]
@@ -100,5 +102,20 @@ autostart = true
 [node name="Placer" type="Node3D" parent="." unique_id=514895326]
 script = ExtResource("3_feb5d")
 troop_scene = ExtResource("4_fc0e3")
+
+[node name="GameOverLayer" type="CanvasLayer" parent="." unique_id=636484184]
+process_mode = 3
+
+[node name="GameOverLabel" type="Label" parent="GameOverLayer" unique_id=1273786114]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 64
+text = "Game Over"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]

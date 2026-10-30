@@ -9,6 +9,9 @@ albedo_color = Color(0.8986459, 0.22738981, 0.21445921, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b6dcw"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_attack"]
+radius = 4.0
+
 [node name="Enemy" type="CharacterBody3D" unique_id=72920145]
 collision_layer = 4
 collision_mask = 7
@@ -28,8 +31,15 @@ shape = SubResource("CapsuleShape3D_b6dcw")
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=1924161802]
 target_desired_distance = 2.0
 
+[node name="AttackArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_attack")
+
 [node name="AttackCooldownTimer" type="Timer" parent="." unique_id=300458377]
 one_shot = true
-autostart = true
 
 [connection signal="timeout" from="AttackCooldownTimer" to="." method="_on_attack_cooldown_timer_timeout"]

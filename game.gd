@@ -6,8 +6,9 @@ signal game_over()
 @export var max_enemies := 10
 
 @onready var enemy_spawn_timer: Timer = $EnemySpawnTimer
-@onready var enemy_target: StaticBody3D = $Shrine
 @onready var enemy_spawn_location: PathFollow3D = $SpawnPath/SpawnLocation
+@onready var shrine: StaticBody3D = $Shrine
+@onready var game_over_label: Label = $GameOverLayer/GameOverLabel
 
 @onready var placer: Node3D = $Placer
 
@@ -18,8 +19,7 @@ var current_round := 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
-	#player.died.connect(_on_player_died)
+	shrine.connect("destroyed", _on_shrine_destroyed)
 	#start_round()
 	
 
@@ -45,7 +45,7 @@ func spawn_enemy() -> void:
 	
 	# And give it a random offset.
 	enemy_spawn_location.progress_ratio = randf()
-	enemy.initialize(enemy_spawn_location.position, enemy_target)
+	enemy.initialize(enemy_spawn_location.position, shrine)
 	# call _on_enemy_died function when enemy's died signal is emitted
 	#enemy.died.connect(_on_enemy_died)
 	
@@ -60,3 +60,14 @@ func _on_enemy_spawn_timer_timeout() -> void:
 		
 	spawn_enemy()
 	enemies_spawned += 1
+
+
+func _on_shrine_destroyed() -> void:
+	if is_game_over:
+		return
+
+	is_game_over = true
+	enemy_spawn_timer.stop()
+	game_over_label.visible = true
+	game_over.emit()
+	get_tree().paused = true
