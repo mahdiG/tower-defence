@@ -8,7 +8,7 @@ signal died()
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent3D
 @onready var attack_cooldown_timer: Timer = $AttackCooldownTimer
 
-var health := 100
+var health := 100.0
 var target: StaticBody3D
 var isAttackOnCooldown := false
 
@@ -42,8 +42,19 @@ func initialize(spawn_position: Vector3, initial_target: StaticBody3D) -> void:
 
 func attack():
 	print("attack target: ", target)
-	if target.has_method("damage"):
-		target.damage(basic_attack_damage)
+	if target.has_method("take_damage"):
+		target.take_damage(basic_attack_damage)
+
+
+func take_damage(amount: float) -> void:
+	health -= amount
+	if health <= 0.0:
+		die()
+
+
+func die() -> void:
+	died.emit()
+	queue_free()
 		
 
 func _on_navigation_agent_velocity_computed(safe_velocity: Vector3) -> void:

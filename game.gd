@@ -9,10 +9,6 @@ signal game_over()
 @onready var enemy_target: StaticBody3D = $Shrine
 @onready var enemy_spawn_location: PathFollow3D = $SpawnPath/SpawnLocation
 
-@onready var fps_label: Label = $DebugStats/DebugContainer/FpsLabel
-@onready var health_label: Label = $DebugStats/DebugContainer/HealthLabel
-@onready var big_center_label: Label = $CenterContainer/BigCenterLabel
-@onready var big_center_label_timer: Timer = $BigCenterLabelTimer
 @onready var placer: Node3D = $Placer
 
 var is_game_over := false
@@ -36,12 +32,8 @@ func _unhandled_input(event: InputEvent) -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
-	#fps_label.text = "FPS: %d" % Engine.get_frames_per_second()
-	
+
 func start_round() -> void:
-	big_center_label.text = "Round %d" % current_round
-	big_center_label.visible = true
-	big_center_label_timer.start()
 	enemies_spawned = 0
 	enemies_dead = 0
 	max_enemies += 10

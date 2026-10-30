@@ -10,7 +10,10 @@ albedo_color = Color(0.8986459, 0.22738981, 0.21445921, 1)
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b6dcw"]
 
 [node name="Enemy" type="CharacterBody3D" unique_id=72920145]
+collision_layer = 4
+collision_mask = 7
 script = ExtResource("1_7k104")
+speed = 5
 metadata/_edit_group_ = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=198226428]

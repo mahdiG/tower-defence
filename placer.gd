@@ -116,6 +116,6 @@ func _is_placement_free(placement_position: Vector3) -> bool:
 
 func _place_troop() -> void:
 	var new_troop := troop_scene.instantiate()
-	new_troop.global_position = troop_preview.global_position
 	add_child(new_troop)
+	new_troop.global_position = troop_preview.global_position
 	cancel_preview()
