@@ -2,15 +2,19 @@ extends Node3D
 
 signal game_over()
 
-@export var enemy_scene: PackedScene
+@export var enemy_scenes: Array[PackedScene] = [
+	preload("res://enemy_minion.tscn"),
+	preload("res://enemy_warrior.tscn"),
+	preload("res://enemy_rogue.tscn"),
+	preload("res://enemy_mage.tscn"),
+]
 @export var max_enemies := 10
 
 @onready var enemy_spawn_timer: Timer = $EnemySpawnTimer
 @onready var enemy_spawn_location: PathFollow3D = $SpawnPath/SpawnLocation
 @onready var shrine: StaticBody3D = $Shrine
 @onready var game_over_label: Label = $GameOverLayer/GameOverLabel
-
-@onready var placer: Node3D = $Placer
+@onready var troop_selector: CanvasLayer = $TroopSelector
 
 var is_game_over := false
 var enemies_spawned := 0
@@ -23,12 +27,6 @@ func _ready() -> void:
 	#start_round()
 	
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			placer.select_troop()
-
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
@@ -40,8 +38,10 @@ func start_round() -> void:
 	enemy_spawn_timer.start()
 
 func spawn_enemy() -> void:
-	print("spawn enemy: ", enemies_spawned)
-	var enemy := enemy_scene.instantiate()
+	if enemy_scenes.is_empty():
+		return
+
+	var enemy: Node = enemy_scenes.pick_random().instantiate()
 	
 	# And give it a random offset.
 	enemy_spawn_location.progress_ratio = randf()
@@ -68,6 +68,7 @@ func _on_shrine_destroyed() -> void:
 
 	is_game_over = true
 	enemy_spawn_timer.stop()
+	troop_selector.visible = false
 	game_over_label.visible = true
 	game_over.emit()
 	get_tree().paused = true

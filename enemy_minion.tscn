@@ -1,11 +1,9 @@
 [gd_scene format=3 uid="uid://bbjd4rmnati4b"]
 
 [ext_resource type="Script" uid="uid://dt22q4hu4nh2n" path="res://enemy.gd" id="1_7k104"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mwb40"]
-albedo_color = Color(0.8986459, 0.22738981, 0.21445921, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_laaf8"]
+[ext_resource type="PackedScene" uid="uid://d3h4i3em2tiaa" path="res://assets/enemies/Skeleton_Minion.glb" id="2_minion"]
+[ext_resource type="PackedScene" path="res://assets/enemies/weapons/Skeleton_Blade.gltf" id="3_blade"]
+[ext_resource type="PackedScene" path="res://assets/enemies/weapons/Skeleton_Shield_Small_A.gltf" id="4_shield"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b6dcw"]
 
@@ -16,13 +14,18 @@ radius = 4.0
 collision_layer = 4
 collision_mask = 7
 script = ExtResource("1_7k104")
-speed = 5
+speed = 6.0
+max_health = 60.0
+basic_attack_damage = 8.0
+attack_interval = 1.0
+combat_idle_animation = "Idle"
+right_hand_weapon = ExtResource("3_blade")
+left_hand_weapon = ExtResource("4_shield")
+left_hand_weapon_rotation = Vector3(90, 0, 0)
 metadata/_edit_group_ = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=198226428]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-material_override = SubResource("StandardMaterial3D_mwb40")
-mesh = SubResource("CapsuleMesh_laaf8")
+[node name="Model" parent="." instance=ExtResource("2_minion")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1917807028]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

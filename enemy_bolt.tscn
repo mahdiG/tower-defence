@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://projectile.gd" id="1_projectile"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bolt"]
+albedo_color = Color(0.25, 0.16, 0.08, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bolt"]
+size = Vector3(0.06, 0.06, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bolt"]
+size = Vector3(0.06, 0.06, 0.8)
+
+[node name="EnemyBolt" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_projectile")
+speed = 35.0
+lifetime = 2.5
+orient_to_velocity = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_bolt")
+mesh = SubResource("BoxMesh_bolt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_bolt")
+
+[node name="LifetimeTimer" type="Timer" parent="."]
+one_shot = true

@@ -1,7 +1,5 @@
 extends Node3D
 
-# Drag your Troop scene into this variable in the Inspector
-@export var troop_scene: PackedScene
 # Layers that block placement (other troops, buildings). Do NOT include the ground.
 @export_flags_3d_physics var blocked_layers: int = 2
 # Radius of the footprint used to check the spawn point
@@ -12,12 +10,17 @@ const PREVIEW_ALPHA := 0.5
 const VALID_COLOR := Color(0.2, 1.0, 0.2, PREVIEW_ALPHA)
 const INVALID_COLOR := Color(1.0, 0.2, 0.2, PREVIEW_ALPHA)
 
+var selected_troop_scene: PackedScene
 var troop_preview: Node3D = null
 var preview_material: StandardMaterial3D = null
 var placement_is_valid := false
 
 
-func select_troop() -> void:
+func select_troop(scene: PackedScene) -> void:
+	if not scene:
+		return
+
+	selected_troop_scene = scene
 	cancel_preview()
 	_create_preview()
 
@@ -52,7 +55,15 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _create_preview() -> void:
-	troop_preview = troop_scene.instantiate()
+	if not selected_troop_scene:
+		return
+
+	var instance := selected_troop_scene.instantiate() as Node3D
+	if not instance:
+		return
+
+	troop_preview = instance
+	troop_preview.set("is_preview", true)
 
 	preview_material = StandardMaterial3D.new()
 	preview_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -71,8 +82,6 @@ func _prepare_preview_node(node: Node) -> void:
 	if node is MeshInstance3D:
 		node.material_override = preview_material
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	if node is Node3D:
-		node.process_mode = Node.PROCESS_MODE_DISABLED
 	for child in node.get_children():
 		_prepare_preview_node(child)
 
@@ -115,7 +124,16 @@ func _is_placement_free(placement_position: Vector3) -> bool:
 
 
 func _place_troop() -> void:
-	var new_troop := troop_scene.instantiate()
+	if not selected_troop_scene or not is_instance_valid(troop_preview):
+		return
+
+	var placement_position := troop_preview.global_position
+	var new_troop := selected_troop_scene.instantiate() as Node3D
+	if not new_troop:
+		return
+
 	add_child(new_troop)
-	new_troop.global_position = troop_preview.global_position
+	new_troop.global_position = placement_position
+
 	cancel_preview()
+	_create_preview()

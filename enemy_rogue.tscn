@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://dt22q4hu4nh2n" path="res://enemy.gd" id="1_7k104"]
+[ext_resource type="PackedScene" path="res://assets/enemies/Skeleton_Rogue.glb" id="2_rogue"]
+[ext_resource type="PackedScene" path="res://assets/enemies/weapons/Skeleton_Crossbow.gltf" id="3_crossbow"]
+[ext_resource type="PackedScene" path="res://assets/enemies/weapons/Skeleton_Quiver.gltf" id="4_quiver"]
+[ext_resource type="PackedScene" path="res://enemy_bolt.tscn" id="5_bolt"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rogue"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_attack"]
+radius = 9.0
+
+[node name="Enemy" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_7k104")
+speed = 6.5
+max_health = 80.0
+basic_attack_damage = 10.0
+attack_interval = 1.4
+attack_type = 1
+projectile_scene = ExtResource("5_bolt")
+attack_animation = "1H_Ranged_Shoot"
+combat_idle_animation = "1H_Ranged_Aiming"
+right_hand_weapon = ExtResource("3_crossbow")
+right_hand_weapon_rotation = Vector3(-90, 0, 0)
+back_accessory = ExtResource("4_quiver")
+back_accessory_bone = "chest"
+back_accessory_offset = Vector3(0, 0.1, -0.45)
+back_accessory_rotation = Vector3(0, 0, 20)
+metadata/_edit_group_ = true
+
+[node name="Model" parent="." instance=ExtResource("2_rogue")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_rogue")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+target_desired_distance = 2.0
+
+[node name="AttackArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_attack")
+
+[node name="AttackCooldownTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="AttackCooldownTimer" to="." method="_on_attack_cooldown_timer_timeout"]

@@ -1,10 +1,9 @@
 [gd_scene format=3 uid="uid://bgjucuqub77wq"]
 
 [ext_resource type="Script" uid="uid://d0d16g24e8kv8" path="res://game.gd" id="1_e2o6t"]
-[ext_resource type="PackedScene" uid="uid://bbjd4rmnati4b" path="res://enemy.tscn" id="2_e2o6t"]
 [ext_resource type="Script" uid="uid://dsd3fi82ydsfd" path="res://placer.gd" id="3_feb5d"]
-[ext_resource type="PackedScene" uid="uid://ccim83gp3bvnk" path="res://troop.tscn" id="4_fc0e3"]
 [ext_resource type="Script" uid="uid://batqbo88cenqf" path="res://shrine.gd" id="5_shrine"]
+[ext_resource type="PackedScene" path="res://troop_selector.tscn" id="6_selector"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e2o6t"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -49,7 +48,6 @@ point_count = 4
 
 [node name="Game" type="Node3D" unique_id=2056687741]
 script = ExtResource("1_e2o6t")
-enemy_scene = ExtResource("2_e2o6t")
 max_enemies = 100
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=123853493]
@@ -94,14 +92,15 @@ curve = SubResource("Curve3D_e2o6t")
 transform = Transform3D(-0.9989625, 0, -0.04540777, 0, 1, 0, 0.04540777, 0, -0.9989625, -68.01337, -0.5, -75.59057)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1102414483]
-transform = Transform3D(1, 0, 0, 0, 0.9592646, 0.2825092, 0, -0.2825092, 0.9592646, 0, 16.726868, 92.92587)
+transform = Transform3D(1, 0, 0, 0, 0.5746048, 0.8184311, 0, -0.8184311, 0.5746048, 0, 16.692238, 25.150871)
 
 [node name="EnemySpawnTimer" type="Timer" parent="." unique_id=254528283]
 autostart = true
 
 [node name="Placer" type="Node3D" parent="." unique_id=514895326]
 script = ExtResource("3_feb5d")
-troop_scene = ExtResource("4_fc0e3")
+
+[node name="TroopSelector" parent="." instance=ExtResource("6_selector")]
 
 [node name="GameOverLayer" type="CanvasLayer" parent="." unique_id=636484184]
 process_mode = 3

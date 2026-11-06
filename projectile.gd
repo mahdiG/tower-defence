@@ -2,6 +2,7 @@ extends Area3D
 
 @export var speed := 25.0
 @export var lifetime := 3.0
+@export var orient_to_velocity := false
 
 var damage := 10.0
 var target: Node3D = null
@@ -27,6 +28,12 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var target_position := target.global_position + Vector3.UP
+
+	if orient_to_velocity:
+		var direction := target_position - global_position
+		if direction.length_squared() > 0.0001 and absf(direction.normalized().dot(Vector3.UP)) < 0.999:
+			look_at(target_position, Vector3.UP)
+
 	global_position = global_position.move_toward(target_position, speed * delta)
 
 	if global_position.distance_squared_to(target_position) < 0.01:

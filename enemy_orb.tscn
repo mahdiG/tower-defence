@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://projectile.gd" id="1_projectile"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_orb"]
+albedo_color = Color(0.75, 0.35, 1, 1)
+emission_enabled = true
+emission = Color(0.55, 0.15, 1, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_orb"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_orb"]
+radius = 0.2
+
+[node name="EnemyOrb" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_projectile")
+speed = 18.0
+lifetime = 3.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_orb")
+mesh = SubResource("SphereMesh_orb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_orb")
+
+[node name="LifetimeTimer" type="Timer" parent="."]
+one_shot = true

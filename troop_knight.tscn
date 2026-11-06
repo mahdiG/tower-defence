@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://troop.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/troops/Knight.glb" id="2_model"]
+[ext_resource type="PackedScene" path="res://assets/troops/weapons/sword_1handed.gltf" id="3_sword"]
+[ext_resource type="PackedScene" path="res://assets/troops/weapons/shield_round.gltf" id="4_shield"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_knight"]
+radius = 0.45
+height = 2.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_attack"]
+radius = 5.0
+
+[node name="Troop" type="StaticBody3D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_script")
+max_health = 250.0
+attack_damage = 18.0
+attack_interval = 1.2
+attack_animation = "1H_Melee_Attack_Chop"
+right_hand_weapon = ExtResource("3_sword")
+left_hand_weapon = ExtResource("4_shield")
+left_hand_weapon_rotation = Vector3(90, 0, 0)
+metadata/_edit_group_ = true
+
+[node name="Model" parent="." instance=ExtResource("2_model")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_knight")
+
+[node name="AttackArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_attack")
+
+[node name="AttackCooldownTimer" type="Timer" parent="."]
+one_shot = true
+

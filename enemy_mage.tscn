@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://dt22q4hu4nh2n" path="res://enemy.gd" id="1_7k104"]
+[ext_resource type="PackedScene" path="res://assets/enemies/Skeleton_Mage.glb" id="2_mage"]
+[ext_resource type="PackedScene" path="res://assets/enemies/weapons/Skeleton_Staff.gltf" id="3_staff"]
+[ext_resource type="PackedScene" path="res://enemy_orb.tscn" id="4_orb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mage"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_attack"]
+radius = 12.0
+
+[node name="Enemy" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_7k104")
+speed = 4.0
+max_health = 70.0
+basic_attack_damage = 16.0
+attack_interval = 2.0
+attack_type = 1
+projectile_scene = ExtResource("4_orb")
+attack_animation = "Spellcast_Shoot"
+combat_idle_animation = "Spellcasting"
+right_hand_weapon = ExtResource("3_staff")
+metadata/_edit_group_ = true
+
+[node name="Model" parent="." instance=ExtResource("2_mage")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_mage")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+target_desired_distance = 2.0
+
+[node name="AttackArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_attack")
+
+[node name="AttackCooldownTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="AttackCooldownTimer" to="." method="_on_attack_cooldown_timer_timeout"]

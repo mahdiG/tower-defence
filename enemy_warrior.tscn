@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://dt22q4hu4nh2n" path="res://enemy.gd" id="1_7k104"]
+[ext_resource type="PackedScene" path="res://assets/enemies/Skeleton_Warrior.glb" id="2_warrior"]
+[ext_resource type="PackedScene" path="res://assets/enemies/weapons/Skeleton_Axe.gltf" id="3_axe"]
+[ext_resource type="PackedScene" path="res://assets/enemies/weapons/Skeleton_Shield_Large_A.gltf" id="4_shield"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_warrior"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_attack"]
+radius = 4.0
+
+[node name="Enemy" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_7k104")
+speed = 3.5
+max_health = 200.0
+basic_attack_damage = 20.0
+attack_interval = 1.6
+attack_animation = "1H_Melee_Attack_Chop"
+combat_idle_animation = "Idle"
+right_hand_weapon = ExtResource("3_axe")
+left_hand_weapon = ExtResource("4_shield")
+left_hand_weapon_rotation = Vector3(90, 0, 0)
+metadata/_edit_group_ = true
+
+[node name="Model" parent="." instance=ExtResource("2_warrior")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_warrior")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+target_desired_distance = 2.0
+
+[node name="AttackArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_attack")
+
+[node name="AttackCooldownTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="AttackCooldownTimer" to="." method="_on_attack_cooldown_timer_timeout"]
